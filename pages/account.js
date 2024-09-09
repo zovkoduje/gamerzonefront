@@ -116,7 +116,7 @@ export default function AccountPage(){
                         {ordersLoaded && (
                             <div>
                                 {session && orders.length === 0 ? (
-                                    <p>You haven't placed any orders yet.<br/> Start shopping now!</p>
+                                    <p>No orders yet.<br/> Start shopping now!</p>
                                 ) : (
                                     orders.length > 0 && orders.map(o => (
                                         <SingleOrder key={o._id} {...o} />
