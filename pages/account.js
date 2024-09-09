@@ -113,14 +113,18 @@ export default function AccountPage(){
                             <Spinner fullwidth/>
                         )}
                         
-                        {ordersLoaded &&(
+                        {ordersLoaded && (
                             <div>
-                                {orders.length===0 &&(
+                                {session && orders.length === 0 ? (
+                                    <p>You haven't placed any orders yet.<br/> Start shopping now!</p>
+                                ) : (
+                                    orders.length > 0 && orders.map(o => (
+                                        <SingleOrder key={o._id} {...o} />
+                                    ))
+                                )}
+                                {!session && (
                                     <p>Login to see your orders</p>
                                 )}
-                                {orders.length>0 && orders.map(o=>(
-                                    <SingleOrder key={o._id} {...o}/>
-                                ))}
                             </div>
                         )}
                     </GrayBox>

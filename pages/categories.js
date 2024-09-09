@@ -77,8 +77,6 @@ export default function CategoriesPage({mainCategories, categoriesProducts}) {
         </>
     );
 }
-
-
 export async function getServerSideProps(){
     const categories = await Category.find()
     const mainCategories = categories.filter(c=>!c.parent)

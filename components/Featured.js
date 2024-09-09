@@ -66,7 +66,6 @@ export default function Featured({product}) {
     function addFeaturedToCart() {
         addProduct(product._id);
     }
-
     const truncatedDescription = product.description.length > 100
         ? product.description.substring(0, 500) + '...'
         : product.description;
