@@ -36,6 +36,7 @@ const Price=styled.span`
     font-size:1.5rem
 `
 const GrayBoxx=styled(GrayBox)`
+    margin-top:20px;
     height: 375px; 
     overflow: hidden;
     
@@ -47,9 +48,20 @@ export default function ProductPage({product}){
             <Header/>
             <Center>
                 <ColWrapper>
-                    <GrayBoxx>
-                        <ProductImages images={product.images}/>
-                    </GrayBoxx>
+                    <div>
+                        <GrayBoxx>
+                            <ProductImages images={product.images}/>
+                        </GrayBoxx>
+                        {product.properties.Brand && (
+                                <p key="Brand"><strong>Brand:</strong> {product.properties.Brand}</p>
+                            )}
+                            {Object.entries(product.properties)
+                                .filter(([key]) => key !== 'Brand')
+                                .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+                                .map(([key, value]) => (
+                                    <p key={key}><strong>{key}:</strong> {value}</p>
+                                ))}
+                    </div>
                     <div>
                         <Title>{product.title}</Title>
                         <p>{product.description}</p>
