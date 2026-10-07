@@ -79,7 +79,7 @@ export default function Footer() {
                     </StyledNav>
                 </Columns>
                 <Disclaimer>
-                     GamerZone is a test project for academic purposes. Don't put your sensitive information on this site. This is not a real shop.
+                     GamerZone is a test project for academic purposes. Don&apos;t put your sensitive information on this site. This is not a real shop.
                 </Disclaimer>
                 <Bottom>© {new Date().getFullYear()} GamerZone</Bottom>
             </Center>
