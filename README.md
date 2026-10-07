@@ -1,40 +1,61 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# GamerZone – Storefront
 
-## Getting Started
+GamerZone is a full-stack e-commerce demo for gaming gear (keyboards, mice and headsets). This repository is the **customer-facing store**. Products, categories and orders are managed in a separate admin dashboard ([gamerzone](https://github.com/zovkoduje/gamerzone)), and both apps share one MongoDB database.
 
-First, run the development server:
+## Live demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Store:** https://gamerzonefront.vercel.app/
+- **Admin dashboard:** https://gamerzone-admin.vercel.app/ (sign-in is limited to whitelisted Google accounts)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> This is a test project for academic purposes. It is not a real shop, and no orders are fulfilled. Please don't enter real payment details or other sensitive information.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Features
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+- Home page with a featured product, category tiles and the newest products in each category
+- Product listing, category pages and search
+- Product pages with an image gallery, specifications and related products
+- Shopping cart, stored in the browser
+- Checkout through Stripe
+- Google sign-in, with a saved shipping address and order history on the account page
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Tech stack
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- [Next.js 14](https://nextjs.org/) (Pages Router) and React 18
+- [styled-components](https://styled-components.com/) for styling
+- [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/)
+- [NextAuth.js](https://next-auth.js.org/) with Google OAuth
+- [Stripe](https://stripe.com/) for checkout
+- Deployed on [Vercel](https://vercel.com/)
 
-## Learn More
+## Running locally
 
-To learn more about Next.js, take a look at the following resources:
+1. Install dependencies:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+2. Create a `.env.local` file in the project root:
 
-## Deploy on Vercel
+   ```
+   MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/gamerzone
+   SECRET=any-long-random-string
+   NEXTAUTH_URL=http://localhost:3000
+   NEXT_PUBLIC_URL=http://localhost:3000
+   PUBLIC_URL=http://localhost:3000
+   GOOGLE_FRONT_ID=your-google-oauth-client-id
+   GOOGLE_FRONT_SECRET=your-google-oauth-client-secret
+   STRIPE_SK=sk_test_...
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   Use the same `MONGODB_URI` as the admin dashboard so both apps see the same products. In Google Cloud, add `http://localhost:3000/api/auth/callback/google` as an authorized redirect URI.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. Start the dev server:
+
+   ```bash
+   npm run dev
+   ```
+
+   Then open http://localhost:3000.
+
+Products are added through the admin dashboard. The home page also expects a featured product, which you set on the admin **Settings** page.

@@ -5,25 +5,35 @@ import CartIcon from "@/icons/CartIcon";
 import Link from "next/link";
 import { CartContext } from "./CartContext";
 import { useContext } from "react";
+import formatPrice from "@/lib/formatPrice";
 
 const Box = styled(Link)`
-    background-color: #f0f2f5;
+    background-color: #fff;
     padding: 20px;
-    height: 120px;
+    height: 200px;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid black;
+    border: 1px solid #e2e4e8;
     border-radius: 10px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    &:hover {
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+    }
     img {
         max-width: 100%;
-        max-height: 80px;
+        max-height: 180px;
+        object-fit: contain;
     }
     @media (max-width: 768px) {
         height: 150px;
         padding: 10px;
-        width: calc(100% - 20px); // Subtracting padding and border
+        width: calc(100% - 22px); // Subtracting padding and border
+        img {
+            max-height: 130px;
+        }
     }
 `;
 const ProductWrapper = styled.div`
@@ -88,7 +98,7 @@ export default function ProductBox({_id,title,description,price,images}){
             <ProductInfoBox>
                 <Title href={url}>{title}</Title>
                 <PriceRow>
-                    <Price>{price}€</Price>
+                    <Price>{formatPrice(price)}</Price>
                     <Button $primary onClick={()=>addProduct(_id)} ><CartIcon/></Button>
 
                 </PriceRow>

@@ -10,6 +10,7 @@ import { useState } from "react";
 import Table from "@/components/Table";
 import Input from "@/components/Input";
 import { useSession } from "next-auth/react";
+import formatPrice from "@/lib/formatPrice";
 
 const ColumnsWrapper = styled.div`
     display: grid;
@@ -157,6 +158,7 @@ export default function CartPage(){
             return;
         }
         axios.get('/api/address').then(response=>{
+            if (!response.data) return;
             setName(response.data.name);
             setEmail(response.data.email);
             setCity(response.data.city);
@@ -263,13 +265,13 @@ export default function CartPage(){
                                                     <QuantityButton onClick={()=>moreOfThisProduct(product._id)}>+</QuantityButton>
                                                 </QuantityBox>
                                             </td>
-                                            <td>{cartProducts.filter(id=> id===product._id).length *product.price}€ </td>
+                                            <td>{formatPrice(cartProducts.filter(id=> id===product._id).length *product.price)}</td>
                                         </tr>
                                     )
                                 })}
                                 <tr>
                                     <td colSpan="2" style={{ textAlign: 'right', fontWeight: 'bold' }}>Total:</td>
-                                    <td style={{ fontWeight: 'bold' }}>{total}€</td>
+                                    <td style={{ fontWeight: 'bold' }}>{formatPrice(total)}</td>
                                 </tr>
                             </tbody>
                         </Table>

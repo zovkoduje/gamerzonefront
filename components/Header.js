@@ -10,12 +10,20 @@ const StyledHeader = styled.header`
     background-color: #000;
     position: sticky;
     top:0;
+    z-index: 10;
+    border-bottom: 1px solid #222;
 `;
 
 const Logo = styled(Link)`
-    color: yellow;
+    color: #fff;
     text-decoration: none;
     z-index: 2;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    span {
+        color: yellow;
+    }
 `;
 
 const Wrapper = styled.div`
@@ -94,7 +102,7 @@ export default function Header(){
         <StyledHeader>
             <Center>
                 <Wrapper>
-                    <Logo href={'/'}>GamerZone</Logo>
+                    <Logo href={'/'}>Gamer<span>Zone</span></Logo>
                     <NavIcon onClick={() => setOpen(!open)}>
                         <div />
                         <div />
