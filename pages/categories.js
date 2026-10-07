@@ -1,97 +1,114 @@
-/* eslint-disable react/jsx-key */
 import Center from "@/components/Center";
 import Header from "@/components/Header";
 import ProductBox from "@/components/ProductBox";
 import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
+import { mongooseConnect } from "@/lib/mongoose";
 import styled from "styled-components";
 import Link from "next/link";
 
 
-
-const Title=styled.h1`
-    font-size:1.5em;
-
-`
 const Grid=styled.div`
     display:grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap:30px;
+    gap:20px;
     @media screen and (max-width:768px){
         grid-template-columns: 1fr 1fr;
+        gap:10px;
     }
 `
 const CategoryTitle=styled.div`
-    margin-top:10px;
-    margin-bottom:10px;
-    font-weight:bold;
     display:flex;
-    align-items:center;
-    gap:20px;
-    font-size:1.5em;
+    align-items:baseline;
+    justify-content:space-between;
+    margin: 40px 0 20px;
+    h2{
+        font-size:2rem;
+        font-weight:600;
+        margin:0;
+    }
     a{
-        color:black;
-        font-size:0.7em;
+        color:#555;
+        text-decoration:none;
+        &:hover{
+            color:#000;
+            text-decoration:underline;
+        }
     }
 `
-const CategoryWrapper=styled.div`
-    margin-bottom:40px;
-`
 const ShowMore=styled(Link)`
-    display:block;
-    height:160px;
+    height:242px;
+    box-sizing:border-box;
     border-radius:10px;
-    border:2px solid black;
-    color:black;
-    font-size:1em;
-    background-color:#f0f2f5;
+    background-color:#111;
+    color:#fff;
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items:center;
+    gap:6px;
     text-decoration:none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    &:hover{
+        background-color:#222;
+        transform: translateY(-2px);
+    }
+    strong{
+        font-size:1.3rem;
+    }
+    span{
+        color:#ff0;
+        font-size:0.9rem;
+    }
+    @media screen and (max-width:768px){
+        height:172px;
+    }
 `
-export default function CategoriesPage({mainCategories, categoriesProducts}) {
+export default function CategoriesPage({mainCategories, categoriesProducts, categoriesCounts}) {
     return(
         <>
             <Header />
             <Center>
                 {mainCategories.map(cat=>(
-                    <CategoryWrapper>
+                    <div key={cat._id}>
                         <CategoryTitle>
-                            {cat.name}
-                            <div> <Link href={'/category/'+cat._id}>Show more</Link></div>
+                            <h2>{cat.name}</h2>
+                            <Link href={'/category/'+cat._id}>Show all &rarr;</Link>
                         </CategoryTitle>
-                        
                         <Grid>
                             {categoriesProducts[cat._id].map(p=>(
                                 <ProductBox {...p} key={p._id}/>
                             ))}
                             <ShowMore href={'/category/'+cat._id}>
-                                Show more &rarr;
+                                <strong>View all</strong>
+                                <span>{categoriesCounts[cat._id]} {cat.name.toLowerCase()} &rarr;</span>
                             </ShowMore>
-                            
                         </Grid>
-                    </CategoryWrapper>
+                    </div>
                 ))}
             </Center>
         </>
     );
 }
 export async function getServerSideProps(){
+    await mongooseConnect();
     const categories = await Category.find()
     const mainCategories = categories.filter(c=>!c.parent)
     const categoriesProducts={};
+    const categoriesCounts={};
     for (const mainCat of mainCategories){
         const mainCatId=mainCat._id.toString()
         const childCatIds= categories.filter(c=>c.parent?.toString() == mainCatId).map(c=>c._id.toString())
         const categoriesIds= [mainCatId, ...childCatIds]
         const products = await Product.find({category: categoriesIds},null,{limit:3, sort:{'_id':-1}})
         categoriesProducts[mainCat._id]=products
+        categoriesCounts[mainCat._id]=await Product.countDocuments({category: categoriesIds})
     }
     return {
         props: {
             mainCategories: JSON.parse(JSON.stringify(mainCategories)),
             categoriesProducts: JSON.parse(JSON.stringify(categoriesProducts)),
+            categoriesCounts,
         }
     }
 }
